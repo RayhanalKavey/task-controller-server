@@ -18,11 +18,18 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
   serverApi: ServerApiVersion.v1,
 });
-// client.connect((err) => {
-//   const collection = client.db("test").collection("devices");
-//   // perform actions on the collection object
-//   client.close();
-// });
+//-------------------------------
+async function run() {
+  try {
+    //Collections
+    //User Collection --1
+    const userCollection = client.db("taskController").collection("users");
+    //Task Collection --2
+    const taskCollection = client.db("taskController").collection("tasks");
+  } finally {
+  }
+}
+//-------------------------------
 
 app.get("/", (req, res) => {
   res.send("Welcome to the Task Controller server");
