@@ -1,0 +1,22 @@
+[
+  {
+    "task_id": "01",
+    "taskTitle": "Email the client",
+    "taskDetails": "Buyers and sellers are controlled with a private route, specific user route, and JWT token",
+    "img": "https://i.ibb.co/pZs0tSd/lap-home.png",
+    "photoText": "A laptop resell website",
+    "isComplete": false,
+    "userEmail": "rayhanalkavey@gmail.com",
+    "taskComment": ""
+  },
+  {
+    "task_id": "02",
+    "taskTitle": "Email the Programming Hero",
+    "taskDetails": "Buyers and sellers are controlled with a private route, specific user route, and JWT token",
+    "img": "https://i.ibb.co/pZs0tSd/lap-home.png",
+    "photoText": "A laptop resell website",
+    "isComplete": false,
+    "userEmail": "rayhanalkavey@gmail.com",
+    "taskComment": ""
+  }
+]
