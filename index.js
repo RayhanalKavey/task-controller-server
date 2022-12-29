@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 require("dotenv").config();
 
@@ -28,6 +28,23 @@ async function run() {
     const userCollection = client.db("taskController").collection("users");
     //Task Collection --2
     const taskCollection = client.db("taskController").collection("tasks");
+    //Task Collection --3
+    const commentCollection = client
+      .db("taskController")
+      .collection("comments");
+
+    //--3 get Comment for adding tasks
+    app.get("/comments", async (req, res) => {
+      let query = {};
+      const comments = await commentCollection.find(query).toArray();
+      res.send(comments);
+    });
+    //--3 Post comment for adding tasks
+    app.post("/comments", async (req, res) => {
+      const comment = req.body;
+      const result = await commentCollection.insertOne(comment);
+      res.send(result);
+    });
 
     //--2 Get all task for adding tasks
     app.get(`/tasks`, async (req, res) => {
@@ -40,6 +57,32 @@ async function run() {
     app.post("/tasks", async (req, res) => {
       const task = req.body;
       const result = await taskCollection.insertOne(task);
+      res.send(result);
+    });
+    //--2 Update task
+    app.put("/tasks/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      // ///
+      // let query = {};
+      // const tasks = await taskCollection.find(query).toArray();
+      // console.log(tasks?.find((task) => task?._id === filter));
+      // ///
+
+      const options = { upsert: true };
+      const updatedDoc = { $set: { isComplete: true } };
+      const result = await taskCollection.updateOne(
+        filter,
+        updatedDoc,
+        options
+      );
+      res.send(result);
+    });
+    // // //--4 deleting task
+    app.delete("/tasks/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await taskCollection.deleteOne(query);
       res.send(result);
     });
   } finally {
