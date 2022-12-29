@@ -34,15 +34,20 @@ async function run() {
       .collection("comments");
 
     //--3 get Comment for adding tasks
-    app.get("/comments", async (req, res) => {
-      let query = {};
-      const comments = await commentCollection.find(query).toArray();
-      res.send(comments);
-    });
+    // app.get("/comments", async (req, res) => {
+    //   let query = {};
+    //   const comments = await commentCollection.find(query).toArray();
+    //   res.send(comments);
+    // });
     //--3 Post comment for adding tasks
-    app.post("/comments", async (req, res) => {
+    app.put("/tasks/comments/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
       const comment = req.body;
-      const result = await commentCollection.insertOne(comment);
+      console.log(comment.comment);
+      const options = { upsert: true };
+      const updatedDoc = { $set: { taskComment: comment.comment } };
+      const result = await taskCollection.updateOne(query, updatedDoc, options);
       res.send(result);
     });
 
