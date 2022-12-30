@@ -28,18 +28,12 @@ async function run() {
     const userCollection = client.db("taskController").collection("users");
     //Task Collection --2
     const taskCollection = client.db("taskController").collection("tasks");
-    //Task Collection --3
+    //Task Collection --3 //not used
     const commentCollection = client
       .db("taskController")
       .collection("comments");
 
-    //--3 get Comment for adding tasks
-    // app.get("/comments", async (req, res) => {
-    //   let query = {};
-    //   const comments = await commentCollection.find(query).toArray();
-    //   res.send(comments);
-    // });
-    //--3 Post comment for adding tasks
+    //--2 Post comment for adding tasks
     app.put("/tasks/comments/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
@@ -68,14 +62,21 @@ async function run() {
     app.put("/tasks/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: ObjectId(id) };
-      // ///
-      // let query = {};
-      // const tasks = await taskCollection.find(query).toArray();
-      // console.log(tasks?.find((task) => task?._id === filter));
-      // ///
-
       const options = { upsert: true };
       const updatedDoc = { $set: { isComplete: true } };
+      const result = await taskCollection.updateOne(
+        filter,
+        updatedDoc,
+        options
+      );
+      res.send(result);
+    });
+    //--2 Update task
+    app.put("/tasks/not-complete/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updatedDoc = { $set: { isComplete: false } };
       const result = await taskCollection.updateOne(
         filter,
         updatedDoc,
