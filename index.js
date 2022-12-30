@@ -58,6 +58,25 @@ async function run() {
       const result = await taskCollection.insertOne(task);
       res.send(result);
     });
+    app.put("/tasks-edit/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+
+      const task = req.body;
+      // console.log(id);
+      // console.log(task);
+
+      const options = { upsert: true };
+      const updatedDoc = {
+        $set: { taskTitle: task?.taskTitle, taskDetails: task?.taskDetails },
+      };
+      const result = await taskCollection.updateOne(
+        filter,
+        updatedDoc,
+        options
+      );
+      res.send(result);
+    });
     //--2 Update task
     app.put("/tasks/:id", async (req, res) => {
       const id = req.params.id;
