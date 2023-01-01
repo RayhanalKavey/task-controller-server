@@ -33,14 +33,24 @@ async function run() {
       .db("taskController")
       .collection("comments");
 
-    //--2 Post comment for adding tasks
+    //--2 Post comment for completed tasks
     app.put("/tasks/comments/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const comment = req.body;
-      console.log(comment.comment);
+      // console.log(comment.comment);
       const options = { upsert: true };
       const updatedDoc = { $set: { taskComment: comment.comment } };
+      const result = await taskCollection.updateOne(query, updatedDoc, options);
+      res.send(result);
+    });
+    //--2 remove comment for completed tasks
+    app.put("/tasks/comments/remove-comment/:id", async (req, res) => {
+      const id = req.params.id;
+      // console.log(id);
+      const query = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updatedDoc = { $set: { taskComment: "" } };
       const result = await taskCollection.updateOne(query, updatedDoc, options);
       res.send(result);
     });
@@ -61,11 +71,7 @@ async function run() {
     app.put("/tasks-edit/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: ObjectId(id) };
-
       const task = req.body;
-      // console.log(id);
-      // console.log(task);
-
       const options = { upsert: true };
       const updatedDoc = {
         $set: { taskTitle: task?.taskTitle, taskDetails: task?.taskDetails },
