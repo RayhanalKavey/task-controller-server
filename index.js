@@ -74,7 +74,11 @@ async function run() {
       const task = req.body;
       const options = { upsert: true };
       const updatedDoc = {
-        $set: { taskTitle: task?.taskTitle, taskDetails: task?.taskDetails },
+        $set: {
+          taskTitle: task?.taskTitle,
+          taskDetails: task?.taskDetails,
+          importance: task?.importance,
+        },
       };
       const result = await taskCollection.updateOne(
         filter,
@@ -84,11 +88,16 @@ async function run() {
       res.send(result);
     });
     //--2 Update task
-    app.put("/tasks/:id", async (req, res) => {
+    app.put("/tasks/complete/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: ObjectId(id) };
+      // const comment = req.body;
+      const currentDate = req.body;
+      // console.log("currentDate", currentDate.currentDate);
       const options = { upsert: true };
-      const updatedDoc = { $set: { isComplete: true } };
+      const updatedDoc = {
+        $set: { isComplete: true, completionDate: currentDate.currentDate },
+      };
       const result = await taskCollection.updateOne(
         filter,
         updatedDoc,
